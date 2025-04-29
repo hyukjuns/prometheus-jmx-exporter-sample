@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-java-app
+spec:
+  selector:
+    matchLabels:
+      app: sample-java-app
+  template:
+    metadata:
+      labels:
+        app: sample-java-app
+    spec:
+      containers:
+      - name: sample-java-app
+        image: hyukjun/jmx-exporter-sample:0.3
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        # JMX 익스포터 포트 (메트릭 노출 엔드포인트)
+        - containerPort: 9090
+          name: metrics
+        - containerPort: 80
+          name: http
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: sample-java-app-podmonitor
+spec:
+  selector:
+    matchLabels:
+      app: sample-java-app
+  podMetricsEndpoints:
+    - port: metrics # 파드 메트릭 포트
+      path: /metrics # URL 엔드포인트
+      interval: 15s
