@@ -16,7 +16,7 @@ spec:
         image: hyukjun/jmx-exporter-sample:0.3
         resources:
           limits:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "500m"
         ports:
         # JMX 익스포터 포트 (메트릭 노출 엔드포인트)
